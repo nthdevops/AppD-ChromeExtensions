@@ -14,13 +14,18 @@ function enviarDadosPagina(param){
 		console.log("Dashtime desativada!");
 		return;
 	}
-	if(!trocaAba && param.tabId !== undefined){ //Efetuar na troca de aba desativada e é evento de mudança de aba
+	var trocaAbaBool = !trocaAba && param.tabId !== undefined;
+	if(trocaAbaBool){ //Efetuar na troca de aba desativada e é evento de mudança de aba
 		console.log("Desativada para troca de abas!");
 		return;
 	}
-	console.log("Enviar evento para a guia atual");
-	let params = {
-		active: true
+
+	let params = {};
+	if(trocaAbaBool){
+		console.log("Enviar evento para a guia atual");
+		params = {
+			active: true
+		}
 	}
 	chrome.tabs.query(params, gotTabs);
 	var d = new Date();
@@ -44,7 +49,9 @@ function enviarDadosPagina(param){
 			horaAtual: parseInt(d.getHours()),
 			diaAtual: d.getDate().toString()
 		}
-		chrome.tabs.sendMessage(tabs[0].id, dados);
+		for(let i = 0; i < tabs.length; i++){
+			chrome.tabs.sendMessage(tabs[i].id, dados);
+		}
 	}
 	ultimaHora = "Last update: "+d.toLocaleString();
 	chrome.alarms.get("UpdateDateTimeFields", function(alarm){
