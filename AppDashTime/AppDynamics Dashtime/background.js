@@ -24,25 +24,19 @@ function enviarDadosPagina(param){
 	}
 	chrome.tabs.query(params, gotTabs);
 	var d = new Date();
-	var dia;
-	var mes;
+	var dia = parseInt(d.getDate());
+	var mes = parseInt(d.getMonth())+1;
 	var ano = d.getFullYear().toString().substr(-2);
-	dia = parseInt(d.getDate());
 	if(dia < 10)
 		dia = "0"+d.getDate().toString();
-	else
-		dia = dia.toString();
-	mes = parseInt(d.getMonth())+1;
 	if(mes < 10)
 		mes = "0"+mes.toString();
-	else
-		mes = mes.toString();
 	function gotTabs(tabs) {
 		let dados = {
 			action: "updateDates",
-			dataAtual: mes+"/"+dia+"/"+ano,
+			dataAtual: mes.toString()+"/"+dia.toString()+"/"+ano,
 			horaAtual: parseInt(d.getHours()),
-			diaAtual: d.getDate().toString()
+			diaAtual: dia.toString()
 		}
 		chrome.tabs.sendMessage(tabs[0].id, dados);
 	}
